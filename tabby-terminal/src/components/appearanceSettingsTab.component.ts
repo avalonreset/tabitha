@@ -2,8 +2,8 @@
 import { Observable, debounceTime, distinctUntilChanged, map } from 'rxjs'
 import { debounce } from 'utils-decorators/dist/esm/debounce/debounce'
 
-import { Component } from '@angular/core'
-import { ConfigService, getCSSFontFamily, PlatformService, ThemesService } from 'tabby-core'
+import { Component, Inject } from '@angular/core'
+import { ConfigService, getCSSFontFamily, PlatformService, Theme, ThemesService } from 'tabby-core'
 
 /** @hidden */
 @Component({
@@ -12,12 +12,16 @@ import { ConfigService, getCSSFontFamily, PlatformService, ThemesService } from 
 })
 export class AppearanceSettingsTabComponent {
     fonts: string[] = []
+    themeOptions: Theme[] = []
 
     constructor (
         public config: ConfigService,
         public themes: ThemesService,
         private platform: PlatformService,
-    ) { }
+        @Inject(Theme) themeOptions: Theme[],
+    ) {
+        this.themeOptions = config.enabledServices(themeOptions)
+    }
 
     async ngOnInit () {
         this.fonts = await this.platform.listFonts()

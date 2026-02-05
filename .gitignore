@@ -6,6 +6,7 @@ node_modules
 build/files.wxs
 dist
 dist-dev
+dist-dev-next
 */dist
 */typings
 *.tsbuildinfo

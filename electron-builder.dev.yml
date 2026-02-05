@@ -5,7 +5,7 @@ productName: Tabitha Dev
 extraMetadata:
   name: tabitha-dev
 directories:
-  output: dist-dev
+  output: dist-dev-next
 protocols:
   - name: Tabitha Dev URL
     schemes:

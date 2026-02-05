@@ -1,4 +1,13 @@
 h3.mb-3(translate) Appearance
+.form-line(*ngIf='themeOptions.length > 1')
+    .header
+        .title(translate) App theme
+        .description(translate) Controls the overall UI styling
+    select.form-control(
+        [(ngModel)]='config.store.appearance.theme',
+        (ngModelChange)='saveConfiguration()',
+    )
+        option(*ngFor='let theme of themeOptions', [ngValue]='theme.name') {{theme.name|translate}}
 .form-line
     .header
         .title(translate) Font

@@ -46,7 +46,7 @@ import { HotkeysService } from './services/hotkeys.service'
 import { CustomMissingTranslationHandler, LocaleService, TabbyFormatedDatePipe } from './services/locale.service'
 import { CommandService } from './services/commands.service'
 
-import { NewTheme } from './theme'
+import { NewTheme, HypeTheme } from './theme'
 import { CoreConfigProvider } from './config'
 import { AppHotkeyProvider } from './hotkeys'
 import { TaskCompletionContextMenu, CommonOptionsContextMenu, TabManagementContextMenu, ProfilesContextMenu } from './tabContextMenu'
@@ -61,6 +61,7 @@ export function TranslateMessageFormatCompilerFactory (): TranslateMessageFormat
 const PROVIDERS = [
     { provide: HotkeyProvider, useClass: AppHotkeyProvider, multi: true },
     { provide: Theme, useClass: NewTheme, multi: true },
+    { provide: Theme, useClass: HypeTheme, multi: true },
     { provide: ConfigProvider, useClass: CoreConfigProvider, multi: true },
     { provide: TabContextMenuItemProvider, useClass: CommonOptionsContextMenu, multi: true },
     { provide: TabContextMenuItemProvider, useClass: TabManagementContextMenu, multi: true },

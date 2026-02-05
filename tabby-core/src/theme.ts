@@ -10,3 +10,11 @@ export class NewTheme extends Theme {
     terminalBackground = '#f7f1e0'
     followsColorScheme = true
 }
+
+/** @hidden */
+@Injectable({ providedIn: 'root' })
+export class HypeTheme extends Theme {
+    name = _('Hype')
+    css = require('./theme.hype.scss')
+    terminalBackground = '#010101'
+}

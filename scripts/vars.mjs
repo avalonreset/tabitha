@@ -18,7 +18,6 @@ export const builtinPlugins = [
     'tabby-terminal',
     'tabby-web',
     'tabby-community-color-schemes',
-    'tabby-theme-hype',
     'tabby-ssh',
     'tabby-serial',
     'tabby-telnet',
