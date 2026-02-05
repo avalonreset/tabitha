@@ -1,7 +1,7 @@
 {
   "name": "tabby-settings",
   "version": "1.0.231-nightly.0",
-  "description": "Tabby terminal settings page",
+  "description": "Tabitha terminal settings page",
   "keywords": [
     "tabby-builtin-plugin"
   ],
@@ -15,7 +15,7 @@
     "dist",
     "typings"
   ],
-  "author": "Tabby Developers",
+  "author": "Tabitha Developers",
   "license": "MIT",
   "devDependencies": {
     "@types/marked": "^5.0.1",

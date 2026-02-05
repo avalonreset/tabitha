@@ -3,10 +3,16 @@ import { app, ipcMain, Menu, dialog } from 'electron'
 // set userData Path on portable version
 import './portable'
 
-const APP_NAME = 'Tabitha'
-app.setName(APP_NAME)
+const DEFAULT_APP_NAME = 'Tabitha'
+const runtimeName = app.getName() || DEFAULT_APP_NAME
+const appName = process.env.TABITHA_APP_NAME || runtimeName
+if (appName !== runtimeName) {
+    app.setName(appName)
+}
+const isDevVariant = appName.toLowerCase().includes('dev')
+const appId = process.env.TABITHA_APP_ID || (isDevVariant ? 'com.avalonreset.tabitha.dev' : 'com.avalonreset.tabitha')
 if (process.platform === 'win32') {
-    app.setAppUserModelId('com.avalonreset.tabitha')
+    app.setAppUserModelId(appId)
 }
 if (app.isPackaged) {
     delete process.env.TABBY_DEV
@@ -45,13 +51,14 @@ process.mainModule = module
 
 const application = new Application(configStore)
 
+const protocolScheme = isDevVariant ? 'tabitha-dev' : 'tabitha'
 // Register tabitha:// URL scheme
 if (process.defaultApp) {
     if (process.argv.length >= 2) {
-        app.setAsDefaultProtocolClient('tabitha', process.execPath, [process.argv[1]])
+        app.setAsDefaultProtocolClient(protocolScheme, process.execPath, [process.argv[1]])
     }
 } else {
-    app.setAsDefaultProtocolClient('tabitha')
+    app.setAsDefaultProtocolClient(protocolScheme)
 }
 
 ipcMain.on('app:new-window', () => {

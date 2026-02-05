@@ -135,15 +135,15 @@ export class ConfigSyncSettingsTabComponent extends BaseComponent {
     }
 
     openSyncHost () {
-        if (this.config.store.configSync.host === 'https://api.tabby.sh') {
-            this.platform.openExternal('https://app.tabby.sh')
+        if (this.config.store.configSync.host === 'https://api.tabitha.sh') {
+            this.platform.openExternal('https://app.tabitha.sh')
         } else {
             this.platform.openExternal(this.config.store.configSync.host)
         }
     }
 
-    openTabbyWebInfo () {
-        this.platform.openExternal('https://github.com/Eugeny/tabby-web')
+    openTabithaWebInfo () {
+        this.platform.openExternal('https://github.com/avalonreset/tabitha')
     }
 
 }

@@ -13,23 +13,23 @@ try {
 
 @Injectable({ providedIn: 'root' })
 export class ShellIntegrationService {
-    private automatorWorkflows = ['Open Tabby here.workflow', 'Paste path into Tabby.workflow']
+    private automatorWorkflows = ['Open Tabitha here.workflow', 'Paste path into Tabitha.workflow']
     private automatorWorkflowsLocation: string
     private automatorWorkflowsDestination: string
     private registryKeys = [
         {
-            path: 'Software\\Classes\\Directory\\Background\\shell\\Tabby',
-            value: 'Open Tabby here',
+            path: 'Software\\Classes\\Directory\\Background\\shell\\Tabitha',
+            value: 'Open Tabitha here',
             command: 'open "%V"',
         },
         {
-            path: 'SOFTWARE\\Classes\\Directory\\shell\\Tabby',
-            value: 'Open Tabby here',
+            path: 'SOFTWARE\\Classes\\Directory\\shell\\Tabitha',
+            value: 'Open Tabitha here',
             command: 'open "%V"',
         },
         {
-            path: 'Software\\Classes\\*\\shell\\Tabby',
-            value: 'Paste path into Tabby',
+            path: 'Software\\Classes\\*\\shell\\Tabitha',
+            value: 'Paste path into Tabitha',
             command: 'paste "%V"',
         },
     ]
@@ -80,11 +80,17 @@ export class ShellIntegrationService {
                 wnr.setRegistryValue(wnr.HK.CU, registryKey.path + '\\command', '', wnr.REG.SZ, exe + ' ' + registryKey.command)
             }
 
-            if (wnr.getRegistryKey(wnr.HK.CU, 'Software\\Classes\\Directory\\Background\\shell\\Open Tabby here')) {
-                wnr.deleteRegistryKey(wnr.HK.CU, 'Software\\Classes\\Directory\\Background\\shell\\Open Tabby here')
-            }
-            if (wnr.getRegistryKey(wnr.HK.CU, 'Software\\Classes\\*\\shell\\Paste path into Tabby')) {
-                wnr.deleteRegistryKey(wnr.HK.CU, 'Software\\Classes\\*\\shell\\Paste path into Tabby')
+            const legacyKeys = [
+                'Software\\Classes\\Directory\\Background\\shell\\Open Tabby here',
+                'Software\\Classes\\*\\shell\\Paste path into Tabby',
+                'Software\\Classes\\Directory\\Background\\shell\\Tabby',
+                'SOFTWARE\\Classes\\Directory\\shell\\Tabby',
+                'Software\\Classes\\*\\shell\\Tabby',
+            ]
+            for (const legacyKey of legacyKeys) {
+                if (wnr.getRegistryKey(wnr.HK.CU, legacyKey)) {
+                    wnr.deleteRegistryKey(wnr.HK.CU, legacyKey)
+                }
             }
         }
     }

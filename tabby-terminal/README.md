@@ -1,4 +1,4 @@
-# Tabby Terminal Plugin
+# Tabitha Terminal Plugin
 
 * terminal tabs
 * terminal frontends

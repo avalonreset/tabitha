@@ -1,4 +1,4 @@
-# Tabby Core Plugin
+# Tabitha Core Plugin
 
 See also:
 

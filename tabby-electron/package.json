@@ -15,7 +15,7 @@
     "dist",
     "typings"
   ],
-  "author": "Tabby Developers",
+  "author": "Tabitha Developers",
   "license": "MIT",
   "peerDependencies": {
     "@angular/core": "^15",

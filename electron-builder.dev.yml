@@ -1,0 +1,15 @@
+---
+extends: ./electron-builder.yml
+appId: com.avalonreset.tabitha.dev
+productName: Tabitha Dev
+directories:
+  output: dist-dev
+protocols:
+  - name: Tabitha Dev URL
+    schemes:
+      - tabitha-dev
+win:
+  artifactName: tabitha-dev-${version}-portable-${env.ARCH}.${ext}
+nsis:
+  artifactName: tabitha-dev-${version}-setup-${env.ARCH}.${ext}
+  shortcutName: Tabitha Dev

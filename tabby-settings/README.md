@@ -1,4 +1,4 @@
-# Tabby Settings Plugin
+# Tabitha Settings Plugin
 
 * tabbed settings interface
 

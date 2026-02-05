@@ -1,5 +1,5 @@
 {
-  "name": "tabby-web-demo",
+  "name": "Tabitha-web-demo",
   "version": "1.0.231-nightly.0",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -11,7 +11,7 @@
     "data",
     "dist"
   ],
-  "author": "Tabby Developers",
+  "author": "Tabitha Developers",
   "license": "MIT",
   "devDependencies": {
     "@types/webpack-env": "^1.16.0"

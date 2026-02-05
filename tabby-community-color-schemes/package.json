@@ -1,9 +1,9 @@
 {
-  "name": "tabby-community-color-schemes",
+  "name": "Tabitha-community-color-schemes",
   "version": "1.0.231-nightly.0",
-  "description": "Community color schemes for Tabby",
+  "description": "Community color schemes for Tabitha",
   "keywords": [
-    "tabby-builtin-plugin"
+    "Tabitha-builtin-plugin"
   ],
   "main": "dist/index.js",
   "typings": "typings/index.d.ts",
@@ -14,11 +14,11 @@
   "files": [
     "dist"
   ],
-  "author": "Tabby Developers",
+  "author": "Tabitha Developers",
   "license": "MIT",
   "peerDependencies": {
     "@angular/core": "^15",
-    "tabby-core": "*",
-    "tabby-terminal": "*"
+    "Tabitha-core": "*",
+    "Tabitha-terminal": "*"
   }
 }

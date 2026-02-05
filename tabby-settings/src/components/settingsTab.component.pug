@@ -9,9 +9,9 @@
                     .row
                         .col-12.col-md-6
                             .logo-area
-                                .tabby-logo.mt-3
+                                .tabitha-logo.mt-3
 
-                                h1.tabby-title Tabby
+                                h1.tabitha-title Tabitha
                                     sup α
                                 .text-muted {{homeBase.appVersion}}
 
@@ -64,7 +64,7 @@
                         .header
                             .title(translate) Language
                             a.description((click)='homeBase.openTranslations()')
-                                span(translate) Help translate Tabby
+                                span(translate) Help translate Tabitha
                                 i.fas.fa-external-link-square-alt.ms-1
                         select.form-control([(ngModel)]='config.store.language', (ngModelChange)='saveConfiguration(true)')
                             option([ngValue]='null', translate) Automatic
@@ -82,7 +82,7 @@
                     .form-line(*ngIf='hostApp.platform !== Platform.Web')
                         .header
                             .title(translate) Enable analytics
-                            .description(translate) We're only tracking your Tabby and OS versions.
+                            .description(translate) We're only tracking your Tabitha and OS versions.
                         toggle(
                             [(ngModel)]='config.store.enableAnalytics',
                             (ngModelChange)='saveConfiguration(true)',

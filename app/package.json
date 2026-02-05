@@ -1,10 +1,10 @@
 {
-  "name": "tabby",
+  "name": "tabitha",
   "description": "A terminal for a modern age",
   "private": true,
-  "repository": "https://github.com/Eugeny/tabby",
+  "repository": "https://github.com/avalonreset/tabitha",
   "author": {
-    "name": "Tabby Developers",
+    "name": "Tabitha Developers",
     "email": "e@ajenti.org"
   },
   "main": "dist/main.js",

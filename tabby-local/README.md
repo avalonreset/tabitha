@@ -1,4 +1,4 @@
-# Tabby Local Plugin
+# Tabitha Local Plugin
 
 * local shells
 
