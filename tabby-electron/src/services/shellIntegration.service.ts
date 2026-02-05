@@ -54,6 +54,9 @@ export class ShellIntegrationService {
         if (this.hostApp.platform === Platform.macOS) {
             return fs.exists(path.join(this.automatorWorkflowsDestination, this.automatorWorkflows[0]))
         } else if (this.hostApp.platform === Platform.Windows) {
+            if (!wnr) {
+                return false
+            }
             return !!wnr.getRegistryKey(wnr.HK.CU, this.registryKeys[0].path)
         }
         return true
@@ -66,6 +69,9 @@ export class ShellIntegrationService {
                 await exec(`cp -r "${this.automatorWorkflowsLocation}/${wf}" "${this.automatorWorkflowsDestination}"`)
             }
         } else if (this.hostApp.platform === Platform.Windows) {
+            if (!wnr) {
+                return
+            }
             for (const registryKey of this.registryKeys) {
                 wnr.createRegistryKey(wnr.HK.CU, registryKey.path)
                 wnr.createRegistryKey(wnr.HK.CU, registryKey.path + '\\command')
@@ -89,6 +95,9 @@ export class ShellIntegrationService {
                 await exec(`rm -rf "${this.automatorWorkflowsDestination}/${wf}"`)
             }
         } else if (this.hostApp.platform === Platform.Windows) {
+            if (!wnr) {
+                return
+            }
             for (const registryKey of this.registryKeys) {
                 wnr.deleteRegistryKey(wnr.HK.CU, registryKey.path)
             }

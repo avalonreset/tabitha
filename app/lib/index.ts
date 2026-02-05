@@ -3,6 +3,12 @@ import { app, ipcMain, Menu, dialog } from 'electron'
 // set userData Path on portable version
 import './portable'
 
+const APP_NAME = 'Tabitha'
+app.setName(APP_NAME)
+if (process.platform === 'win32') {
+    app.setAppUserModelId('com.avalonreset.tabitha')
+}
+
 // set defaults of environment variables
 import 'dotenv/config'
 process.env.TABBY_PLUGINS ??= ''

@@ -39,6 +39,10 @@ export class WebPlatformService extends PlatformService {
         return ''
     }
 
+    clipboardHasImage (): boolean {
+        return false
+    }
+
     setClipboard (content: ClipboardContent): void {
         copyToClipboard(content.text)
     }

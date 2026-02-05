@@ -528,7 +528,15 @@ export class BaseTerminalTabComponent<P extends BaseTerminalProfile> extends Bas
     }
 
     async paste (): Promise<void> {
+        if (this.hostApp.platform === Platform.Windows && this.platform.clipboardHasImage()) {
+            // Let apps that handle Ctrl+V (e.g. image paste) receive the key
+            this.sendInput('\x16')
+            return
+        }
         let data = this.platform.readClipboard()
+        if (data.length === 0) {
+            return
+        }
         if (this.hostApp.platform === Platform.Windows) {
             data = data.replaceAll('\r\n', '\r')
         } else {

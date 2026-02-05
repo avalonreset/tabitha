@@ -66,8 +66,28 @@ export class ElectronPlatformService extends PlatformService {
         return this.electron.clipboard.readText()
     }
 
+    clipboardHasImage (): boolean {
+        try {
+            const image = this.electron.clipboard.readImage()
+            if (!image || image.isEmpty()) {
+                return false
+            }
+            return this.electron.clipboard.readText().length === 0
+        } catch {
+            return false
+        }
+    }
+
     setClipboard (content: ClipboardContent): void {
         require('@electron/remote').clipboard.write(content)
+    }
+
+    clipboardHasImage (): boolean {
+        try {
+            return !this.electron.clipboard.readImage().isEmpty()
+        } catch {
+            return false
+        }
     }
 
     async installPlugin (name: string, version: string): Promise<void> {
@@ -91,6 +111,9 @@ export class ElectronPlatformService extends PlatformService {
     }
 
     getWinSCPPath (): string|null {
+        if (!wnr) {
+            return null
+        }
         const key = wnr.getRegistryKey(wnr.HK.CR, 'WinSCP.Url\\DefaultIcon')
         if (key?.['']) {
             let detectedPath = key[''].value?.split(',')[0]

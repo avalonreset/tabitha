@@ -6,7 +6,10 @@ import { Frontend, SearchOptions, SearchState } from './frontend'
 import { Terminal, ITheme } from '@xterm/xterm'
 import { FitAddon } from '@xterm/addon-fit'
 import { ClipboardAddon } from '@xterm/addon-clipboard'
-import { LigaturesAddon } from '@xterm/addon-ligatures'
+let LigaturesAddon: any
+try {
+    ;({ LigaturesAddon } = require('@xterm/addon-ligatures'))
+} catch { }
 import { ISearchOptions, SearchAddon } from '@xterm/addon-search'
 import { WebglAddon } from '@xterm/addon-webgl'
 import { Unicode11Addon } from '@xterm/addon-unicode11'
@@ -76,7 +79,7 @@ export class XTermFrontend extends Frontend {
     private searchState: SearchState = { resultCount: 0 }
     private fitAddon = new FitAddon()
     private serializeAddon = new SerializeAddon()
-    private ligaturesAddon?: LigaturesAddon
+    private ligaturesAddon?: any
     private webGLAddon?: WebglAddon
     private canvasAddon?: CanvasAddon
     private opened = false
@@ -456,7 +459,7 @@ export class XTermFrontend extends Frontend {
 
         this.configureColors(profile.terminalColorScheme)
 
-        if (this.opened && config.terminal.ligatures && !this.ligaturesAddon && this.hostApp.platform !== Platform.Web) {
+        if (this.opened && config.terminal.ligatures && !this.ligaturesAddon && this.hostApp.platform !== Platform.Web && LigaturesAddon) {
             this.ligaturesAddon = new LigaturesAddon()
             this.xterm.loadAddon(this.ligaturesAddon)
         }

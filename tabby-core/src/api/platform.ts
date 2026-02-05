@@ -151,7 +151,11 @@ export abstract class PlatformService {
     protected themeChanged = new Subject<PlatformTheme>()
 
     abstract readClipboard (): string
+    abstract clipboardHasImage (): boolean
     abstract setClipboard (content: ClipboardContent): void
+    clipboardHasImage (): boolean {
+        return false
+    }
     abstract loadConfig (): Promise<string>
     abstract saveConfig (content: string): Promise<void>
 
