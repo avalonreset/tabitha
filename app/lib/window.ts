@@ -62,7 +62,7 @@ export class Window {
         const bwOptions: BrowserWindowConstructorOptions = {
             width: 800,
             height: 600,
-            title: 'Tabby',
+            title: 'Tabitha',
             minWidth: 400,
             minHeight: 300,
             webPreferences: {
@@ -76,6 +76,10 @@ export class Window {
             show: false,
             backgroundColor: '#00000000',
             acceptFirstMouse: true,
+        }
+
+        if (process.platform === 'win32' || process.platform === 'linux') {
+            bwOptions.icon = path.join(app.getAppPath(), 'assets', 'icon.png')
         }
 
         if (this.windowBounds) {
@@ -113,6 +117,24 @@ export class Window {
         }
 
         this.webContents = this.window.webContents
+
+        const showWindow = () => {
+            if (options.hidden || this.window.isVisible() || this.window.isDestroyed()) {
+                return
+            }
+            if (maximized) {
+                this.window.maximize()
+            } else {
+                this.window.show()
+            }
+            this.window.focus()
+            this.window.moveTop()
+        }
+
+        if (app.isPackaged) {
+            this.window.once('ready-to-show', showWindow)
+            setTimeout(showWindow, 1500)
+        }
 
         const rendererLogPath = path.join(app.getPath('userData'), 'renderer.log')
         const appendRendererLog = (line: string) => {

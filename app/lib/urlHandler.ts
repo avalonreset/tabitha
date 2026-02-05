@@ -1,8 +1,11 @@
 import { createParserConfig } from './cli'
 import { parse as parseShellCommand } from 'shell-quote'
 
+const acceptedSchemes = ['tabby://', 'tabitha://']
+
 export function isTabbyURL (arg: string): boolean {
-    return arg.toLowerCase().startsWith('tabby://')
+    const lower = arg.toLowerCase()
+    return acceptedSchemes.some(scheme => lower.startsWith(scheme))
 }
 
 export function parseTabbyURL (url: string, cwd: string = process.cwd()): any {
@@ -20,7 +23,7 @@ export function parseTabbyURL (url: string, cwd: string = process.cwd()): any {
             return command.toLowerCase() === primaryCommand.split(/\s+/)[0].toLowerCase()
         })
         if (!commandConfig) {
-            console.error(`Unknown command in tabby:// URL: ${command}`)
+            console.error(`Unknown command in tabitha:// URL: ${command}`)
             return null
         }
         const primaryCommand = Array.isArray(commandConfig.command) ? commandConfig.command[0] : commandConfig.command
@@ -56,7 +59,7 @@ export function parseTabbyURL (url: string, cwd: string = process.cwd()): any {
         console.log(`URL Handler - Safely parsed [${url}] to:`, JSON.stringify(argv))
         return argv
     } catch (e) {
-        console.error('Failed to parse tabby:// URL:', e)
+        console.error('Failed to parse tabitha:// URL:', e)
         return null
     }
 }

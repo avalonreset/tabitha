@@ -8,6 +8,10 @@ app.setName(APP_NAME)
 if (process.platform === 'win32') {
     app.setAppUserModelId('com.avalonreset.tabitha')
 }
+if (app.isPackaged) {
+    delete process.env.TABBY_DEV
+    process.env.TABBY_FORCE_ANGULAR_PROD = '1'
+}
 
 // set defaults of environment variables
 import 'dotenv/config'
@@ -41,13 +45,13 @@ process.mainModule = module
 
 const application = new Application(configStore)
 
-// Register tabby:// URL scheme
+// Register tabitha:// URL scheme
 if (process.defaultApp) {
     if (process.argv.length >= 2) {
-        app.setAsDefaultProtocolClient('tabby', process.execPath, [process.argv[1]])
+        app.setAsDefaultProtocolClient('tabitha', process.execPath, [process.argv[1]])
     }
 } else {
-    app.setAsDefaultProtocolClient('tabby')
+    app.setAsDefaultProtocolClient('tabitha')
 }
 
 ipcMain.on('app:new-window', () => {
