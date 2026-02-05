@@ -21,6 +21,26 @@ location.hash = ''
 
 ;(process as any).enablePromiseAPI = true
 
+window.addEventListener('error', (event: ErrorEvent) => {
+    const err = event.error as any
+    const details = err?.stack ?? err ?? event.message
+    console.error('window.error', details)
+})
+
+window.addEventListener('unhandledrejection', (event: PromiseRejectionEvent) => {
+    const reason = (event as any).reason
+    const details = reason?.stack ?? reason
+    console.error('unhandledrejection', details)
+})
+
+const originalConsoleError = console.error.bind(console)
+console.error = (...args: any[]) => {
+    originalConsoleError(...args)
+    if (args[0] === 'ERROR' && args[1]?.stack) {
+        originalConsoleError('ERROR_STACK', args[1].stack)
+    }
+}
+
 if (process.platform === 'win32' && !('HOME' in process.env)) {
     process.env.HOME = `${process.env.HOMEDRIVE}${process.env.HOMEPATH}`
 }

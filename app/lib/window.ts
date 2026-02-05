@@ -5,6 +5,7 @@ import { BrowserWindow, app, ipcMain, Rectangle, Menu, screen, BrowserWindowCons
 import ElectronConfig = require('electron-config')
 import { enable as enableRemote } from '@electron/remote/main'
 import * as os from 'os'
+import * as fs from 'fs'
 import * as path from 'path'
 import macOSRelease from 'macos-release'
 import { compare as compareVersions } from 'compare-versions'
@@ -112,6 +113,27 @@ export class Window {
         }
 
         this.webContents = this.window.webContents
+
+        const rendererLogPath = path.join(app.getPath('userData'), 'renderer.log')
+        const appendRendererLog = (line: string) => {
+            try {
+                fs.appendFileSync(rendererLogPath, `${new Date().toISOString()} ${line}\n`)
+            } catch {
+                // ignore logging failures
+            }
+        }
+
+        this.window.webContents.on('console-message', (_event, level, message, line, sourceId) => {
+            appendRendererLog(`[console:${level}] ${message} (${sourceId}:${line})`)
+        })
+
+        this.window.webContents.on('did-fail-load', (_event, errorCode, errorDescription, validatedURL) => {
+            appendRendererLog(`[did-fail-load] ${errorCode} ${errorDescription} ${validatedURL}`)
+        })
+
+        this.window.webContents.on('render-process-gone', (_event, details) => {
+            appendRendererLog(`[render-process-gone] ${JSON.stringify(details)}`)
+        })
 
         this.window.webContents.once('did-finish-load', () => {
             if (process.platform === 'darwin') {

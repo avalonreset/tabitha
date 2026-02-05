@@ -164,6 +164,7 @@ export default options => {
             '@tabby-gang/windows-process-tree',
             '@tabby-gang/windows-process-tree/build/Release/windows_process_tree.node',
             /^@angular(?!\/common\/locales)/,
+            /^@xterm\//,
             /^@ng-bootstrap/,
             /^rxjs/,
             /^tabby-/,

@@ -48,6 +48,9 @@ export class WSLShellProvider extends ShellProvider {
         if (this.hostApp.platform !== Platform.Windows) {
             return []
         }
+        if (!wnr) {
+            return []
+        }
 
         const bashPath = `${process.env.windir}\\system32\\bash.exe`
         const wslPath = `${process.env.windir}\\system32\\wsl.exe`
