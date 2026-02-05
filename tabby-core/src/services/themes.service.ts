@@ -226,6 +226,12 @@ export class ThemesService {
     }
 
     private applyCurrentTheme (): void {
-        this.applyTheme(this.findCurrentTheme())
+        const desiredName = this.getConfigStoreOrDefaults().appearance.theme
+        const desiredTheme = this.findTheme(desiredName)
+        if (!desiredTheme && this.config.store) {
+            this.config.store.appearance.theme = this.standardTheme.name
+            this.config.save()
+        }
+        this.applyTheme(desiredTheme ?? this.standardTheme)
     }
 }
