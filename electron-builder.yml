@@ -7,6 +7,7 @@ protocols:
   - name: Tabitha URL
     schemes:
       - tabitha
+afterPack: "build/afterPack.cjs"
 files:
 - '**/*'
 - dist
@@ -41,6 +42,7 @@ asarUnpack:
 win:
   icon: "./build/windows/icon.ico"
   artifactName: tabitha-${version}-portable-${env.ARCH}.${ext}
+  signAndEditExecutable: false
   signtoolOptions:
     rfc3161TimeStampServer: http://timestamp.sectigo.com
 nsis:
