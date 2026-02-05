@@ -42,3 +42,6 @@ crowdin.yml
 # local electron logs
 electron.log
 electron-dev.log
+
+# local research / clones
+external/

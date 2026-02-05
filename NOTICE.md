@@ -10,3 +10,9 @@ Upstream project:
 
 This fork is not affiliated with or endorsed by the upstream project.
 All trademarks, service marks, and logos are the property of their respective owners.
+
+Bundled theme:
+- Name: Hype Theme
+- Author: Eugene Pankov
+- License: MIT
+- Source: https://github.com/Eugeny/tabby-theme-hype

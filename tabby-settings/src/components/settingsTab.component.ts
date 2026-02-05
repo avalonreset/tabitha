@@ -3,6 +3,7 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker'
 import * as yaml from 'js-yaml'
 import { debounce } from 'utils-decorators/dist/esm/debounce/debounce'
 import { Component, Inject, Input, HostBinding, Injector } from '@angular/core'
+import { DomSanitizer } from '@angular/platform-browser'
 import {
     ConfigService,
     BaseTabComponent,
@@ -38,6 +39,7 @@ export class SettingsTabComponent extends BaseTabComponent {
     updateAvailable = false
     showConfigDefaults = false
     allLanguages = LocaleService.allLanguages
+    logoSvg: any
     @HostBinding('class.pad-window-controls') padWindowControls = false
 
     constructor (
@@ -49,11 +51,13 @@ export class SettingsTabComponent extends BaseTabComponent {
         public locale: LocaleService,
         public updater: UpdaterService,
         private app: AppService,
+        private domSanitizer: DomSanitizer,
         @Inject(SettingsTabProvider) public settingsProviders: SettingsTabProvider[],
         translate: TranslateService,
         injector: Injector,
     ) {
         super(injector)
+        this.logoSvg = this.domSanitizer.bypassSecurityTrustHtml(require('../assets/logo.svg'))
         this.setTitle(translate.instant(_('Settings')))
         this.settingsProviders = config.enabledServices(this.settingsProviders)
         this.settingsProviders = this.settingsProviders.filter(x => !!x.getComponentType())

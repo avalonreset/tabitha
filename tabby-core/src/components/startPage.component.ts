@@ -13,12 +13,14 @@ import { Command, CommandLocation } from '../api/commands'
 export class StartPageComponent {
     version: string
     commands: Command[] = []
+    logoSvg: any
 
     constructor (
         private domSanitizer: DomSanitizer,
         public homeBase: HomeBaseService,
         commands: CommandService,
     ) {
+        this.logoSvg = this.domSanitizer.bypassSecurityTrustHtml(require('../assets/logo.svg'))
         commands.getCommands({}).then(c => {
             this.commands = c.filter(x => x.locations?.includes(CommandLocation.StartPage))
         })

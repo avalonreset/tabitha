@@ -1,9 +1,9 @@
 {
-  "name": "Tabitha-telnet",
+  "name": "tabby-telnet",
   "version": "1.0.231-nightly.0",
   "description": "Telnet/socket connections for Tabitha",
   "keywords": [
-    "Tabitha-builtin-plugin"
+    "tabby-builtin-plugin"
   ],
   "main": "dist/index.js",
   "typings": "typings/index.d.ts",
@@ -29,8 +29,8 @@
     "@angular/platform-browser": "^15",
     "@ng-bootstrap/ng-bootstrap": "^14",
     "rxjs": "^7",
-    "Tabitha-core": "*",
-    "Tabitha-settings": "*",
-    "Tabitha-terminal": "*"
+    "tabby-core": "*",
+    "tabby-settings": "*",
+    "tabby-terminal": "*"
   }
 }

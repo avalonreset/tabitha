@@ -2,6 +2,8 @@
 extends: ./electron-builder.yml
 appId: com.avalonreset.tabitha.dev
 productName: Tabitha Dev
+extraMetadata:
+  name: tabitha-dev
 directories:
   output: dist-dev
 protocols:

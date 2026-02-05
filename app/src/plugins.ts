@@ -83,7 +83,8 @@ export function initModuleLookup (userPluginsPath: string): void {
         process.env.TABBY_PLUGINS.split(':').map(x => paths.push(normalizePath(x)))
     }
 
-    process.env.NODE_PATH += path.delimiter + paths.join(path.delimiter)
+    const normalizedPaths = paths.map(x => normalizePath(x))
+    process.env.NODE_PATH = normalizedPaths.join(path.delimiter)
     nodeModule._initPaths()
 
     builtinModules.forEach(m => {

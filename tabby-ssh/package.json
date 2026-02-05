@@ -1,9 +1,9 @@
 {
-  "name": "Tabitha-ssh",
+  "name": "tabby-ssh",
   "version": "1.0.231-nightly.0",
   "description": "SSH connections for Tabitha",
   "keywords": [
-    "Tabitha-builtin-plugin"
+    "tabby-builtin-plugin"
   ],
   "main": "dist/index.js",
   "typings": "typings/index.d.ts",
@@ -37,9 +37,9 @@
     "@angular/platform-browser": "^15",
     "@ng-bootstrap/ng-bootstrap": "^14",
     "rxjs": "^7",
-    "Tabitha-core": "*",
-    "Tabitha-settings": "*",
-    "Tabitha-terminal": "*"
+    "tabby-core": "*",
+    "tabby-settings": "*",
+    "tabby-terminal": "*"
   },
   "resolutions": {
     "glob": "7.2.3"
