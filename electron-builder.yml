@@ -50,7 +50,9 @@ nsis:
   artifactName: tabitha-${version}-setup-${env.ARCH}.${ext}
   installerIcon: "./build/windows/icon.ico"
   allowToChangeInstallationDirectory: true
-  shortcutName: Tabitha Terminal
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Tabitha
 mac:
   category: public.app-category.utilities
   icon: "./build/mac/icon.icns"

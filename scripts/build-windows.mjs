@@ -10,6 +10,7 @@ const keypair = process.env.SM_KEYPAIR_ALIAS
 process.env.ARCH = process.env.ARCH || process.arch
 
 console.log('Signing enabled:', !!keypair)
+execSync('node scripts/prepackage-plugins.mjs', { stdio: 'inherit' })
 
 builder({
     dir: true,
