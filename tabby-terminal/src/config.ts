@@ -121,6 +121,7 @@ export class TerminalConfigProvider extends ConfigProvider {
                     'Ctrl-Shift-C',
                 ],
                 paste: [
+                    'Ctrl-V',
                     'Ctrl-Shift-V',
                     'Shift-Insert',
                 ],

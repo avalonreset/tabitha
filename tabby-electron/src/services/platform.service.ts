@@ -70,6 +70,14 @@ export class ElectronPlatformService extends PlatformService {
         require('@electron/remote').clipboard.write(content)
     }
 
+    clipboardHasImage (): boolean {
+        try {
+            return !this.electron.clipboard.readImage().isEmpty()
+        } catch {
+            return false
+        }
+    }
+
     async installPlugin (name: string, version: string): Promise<void> {
         await (promiseIpc as RendererProcessType).send('plugin-manager:install', name, version)
     }
