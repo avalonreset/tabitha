@@ -85,6 +85,8 @@ export class XTermFrontend extends Frontend {
     private opened = false
     private resizeObserver?: any
     private flowControl: FlowControl
+    private lastRenderAt = Date.now()
+    private resettingRenderer = false
 
     private configService: ConfigService
     private hotkeysService: HotkeysService
@@ -129,6 +131,9 @@ export class XTermFrontend extends Frontend {
         })
         this.xterm.onResize(({ cols, rows }) => {
             this.resize.next({ rows, columns: cols })
+        })
+        this.xterm.onRender(() => {
+            this.lastRenderAt = Date.now()
         })
         this.xterm.onTitleChange(title => {
             this.title.next(title)
@@ -474,6 +479,47 @@ export class XTermFrontend extends Frontend {
         }
         this.fitAddon.fit()
         this.xterm.refresh(0, this.xterm.rows - 1)
+    }
+
+    ensureRendererAlive (): void {
+        if (!this.xterm.element) {
+            return
+        }
+
+        const now = Date.now()
+        const canvas = this.xterm.element.querySelector('canvas') as HTMLCanvasElement | null
+        const canvasInvalid = !!canvas && (canvas.width === 0 || canvas.height === 0)
+        const renderStale = now - this.lastRenderAt > 1000
+
+        if (canvasInvalid || renderStale) {
+            this.resetRenderer()
+        }
+    }
+
+    resetRenderer (): void {
+        if (this.resettingRenderer) {
+            return
+        }
+        this.resettingRenderer = true
+        try {
+            this.webGLAddon?.dispose()
+            this.canvasAddon?.dispose()
+            this.webGLAddon = undefined
+            this.canvasAddon = undefined
+
+            if (this.enableWebGL) {
+                this.webGLAddon = new WebglAddon()
+                this.xterm.loadAddon(this.webGLAddon)
+            } else {
+                this.canvasAddon = new CanvasAddon()
+                this.xterm.loadAddon(this.canvasAddon)
+            }
+
+            this.forceResize()
+            this.xterm.refresh(0, this.xterm.rows - 1)
+        } finally {
+            this.resettingRenderer = false
+        }
     }
 
     private getSearchOptions (searchOptions?: SearchOptions): ISearchOptions {

@@ -450,9 +450,11 @@ export class BaseTerminalTabComponent<P extends BaseTerminalProfile> extends Bas
                         const restore = () => {
                             this.frontend!.setZoom(this.zoom)
                             this.frontend!.forceResize()
+                            this.frontend!.ensureRendererAlive()
                         }
                         restore()
                         setTimeout(restore, 50)
+                        setTimeout(restore, 250)
                     }
                 }
             })
