@@ -343,6 +343,7 @@ export class BaseTerminalTabComponent<P extends BaseTerminalProfile> extends Bas
         this.focused$.subscribe(() => {
             this.configure()
             this.frontend?.focus()
+            this.scheduleRendererRestore('focus')
         })
 
         this.subscribeUntilDestroyed(this.platform.themeChanged$, () => {
@@ -454,19 +455,29 @@ export class BaseTerminalTabComponent<P extends BaseTerminalProfile> extends Bas
         this.visibility$
             .pipe(debounce(visibility => interval(visibility ? 0 : INACTIVE_TAB_UNLOAD_DELAY)))
             .subscribe(visibility => {
-                if (this.frontend instanceof XTermFrontend) {
-                    if (visibility) {
-                        const restore = () => {
-                            this.frontend!.setZoom(this.zoom)
-                            this.frontend!.forceResize()
-                            this.frontend!.ensureRendererAlive()
-                        }
-                        restore()
-                        setTimeout(restore, 50)
-                        setTimeout(restore, 250)
-                    }
+                if (visibility) {
+                    this.scheduleRendererRestore('visibility')
                 }
             })
+    }
+
+    private scheduleRendererRestore (reason: string): void {
+        if (!(this.frontend instanceof XTermFrontend)) {
+            return
+        }
+
+        const restore = () => {
+            this.logger.debug('Renderer restore', { reason })
+            this.frontend!.setZoom(this.zoom)
+            this.frontend!.forceResize()
+            this.frontend!.ensureRendererAlive()
+            this.frontend!.forceReattachIfNeeded()
+        }
+
+        restore()
+        setTimeout(restore, 50)
+        setTimeout(restore, 250)
+        setTimeout(restore, 1000)
     }
 
     protected onFrontendReady (): void {

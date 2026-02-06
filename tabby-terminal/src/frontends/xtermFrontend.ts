@@ -87,6 +87,7 @@ export class XTermFrontend extends Frontend {
     private flowControl: FlowControl
     private lastRenderAt = Date.now()
     private resettingRenderer = false
+    private lastHardResetAt = 0
 
     private configService: ConfigService
     private hotkeysService: HotkeysService
@@ -498,6 +499,30 @@ export class XTermFrontend extends Frontend {
         if (canvasInvalid || renderStale) {
             this.logger.warn('Renderer stalled, resetting', { canvasInvalid, renderStale })
             this.resetRenderer()
+        }
+    }
+
+    forceReattachIfNeeded (): void {
+        if (!this.element) {
+            return
+        }
+
+        const now = Date.now()
+        if (now - this.lastHardResetAt < 5000) {
+            return
+        }
+
+        const canvas = this.xterm.element?.querySelector('canvas') as HTMLCanvasElement | null
+        const canvasInvalid = !!canvas && (canvas.width === 0 || canvas.height === 0)
+        const renderStale = now - this.lastRenderAt > 2000
+
+        if (canvasInvalid || renderStale) {
+            this.logger.warn('Renderer hard reattach', { canvasInvalid, renderStale })
+            this.lastHardResetAt = now
+            this.element.textContent = ''
+            this.xterm.open(this.element)
+            this.forceResize()
+            this.xterm.refresh(0, this.xterm.rows - 1)
         }
     }
 
