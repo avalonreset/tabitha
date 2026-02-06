@@ -45,12 +45,19 @@ export class ElectronHostAppService extends HostAppService {
             }
 
             if (argv?.selfTest) {
-                setTimeout(() => {
+                const start = Date.now()
+                const interval = setInterval(() => {
                     const fn = (window as any).tabithaSelfTestRun
                     if (typeof fn === 'function') {
+                        clearInterval(interval)
                         fn()
+                        return
                     }
-                })
+                    if (Date.now() - start > 30000) {
+                        clearInterval(interval)
+                        this.logger.warn('Self-test runner not available after timeout')
+                    }
+                }, 250)
             }
         }))
 

@@ -90,6 +90,7 @@ const runSelfTest = async () => {
     const config = moduleRef.injector.get(ConfigService)
     const log = moduleRef.injector.get(LogService).create('selftest')
 
+    log.info('Self-test started')
     const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
     const allProfiles = await profiles.getProfiles()
@@ -138,6 +139,7 @@ const runSelfTest = async () => {
         await sleep(35000)
     }
 
+    log.info('Self-test passed')
     ipcRenderer.send('app:self-test-result', { ok: true })
 }
 
