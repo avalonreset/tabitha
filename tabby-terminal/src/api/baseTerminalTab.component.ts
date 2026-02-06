@@ -448,10 +448,6 @@ export class BaseTerminalTabComponent<P extends BaseTerminalProfile> extends Bas
                 if (this.frontend instanceof XTermFrontend) {
                     if (visibility) {
                         const restore = () => {
-                            this.frontend!.xterm.element?.querySelectorAll('canvas').forEach(c => {
-                                c.style.height = ''
-                                c.style.width = ''
-                            })
                             this.frontend!.setZoom(this.zoom)
                             this.frontend!.xterm.refresh(0, this.frontend!.xterm.rows - 1)
                         }
