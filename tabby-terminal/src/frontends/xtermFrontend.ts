@@ -492,6 +492,7 @@ export class XTermFrontend extends Frontend {
         const renderStale = now - this.lastRenderAt > 1000
 
         if (canvasInvalid || renderStale) {
+            console.warn('Renderer stalled, resetting', { canvasInvalid, renderStale })
             this.resetRenderer()
         }
     }

@@ -8,7 +8,7 @@ export class TerminalConfigProvider extends ConfigProvider {
             'copy-current-path': [],
         },
         terminal: {
-            frontend: 'xterm-webgl',
+            frontend: 'xterm',
             fontSize: 14,
             fontWeight: 400,
             fontWeightBold: 700,

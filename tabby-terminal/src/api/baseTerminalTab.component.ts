@@ -368,10 +368,19 @@ export class BaseTerminalTabComponent<P extends BaseTerminalProfile> extends Bas
             }
         }
 
+        const requestedFrontend = this.config.store.terminal.frontend
+        const stableFrontend = (this.hostApp.platform === Platform.Windows && requestedFrontend === 'xterm-webgl')
+            ? 'xterm'
+            : requestedFrontend
+
+        if (stableFrontend !== requestedFrontend) {
+            this.logger.warn('Forcing non-WebGL frontend for stability', { requestedFrontend })
+        }
+
         const cls: new (..._) => Frontend = enable8884Workarround ? XTermFrontend : {
             xterm: XTermFrontend,
             'xterm-webgl': XTermWebGLFrontend,
-        }[this.config.store.terminal.frontend] ?? XTermFrontend
+        }[stableFrontend] ?? XTermFrontend
         this.frontend = new cls(this.injector)
 
         this.frontendReady$.pipe(first()).subscribe(() => {
