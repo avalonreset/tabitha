@@ -1,7 +1,7 @@
 import deepEqual from 'deep-equal'
 import { BehaviorSubject, filter, firstValueFrom, takeUntil } from 'rxjs'
 import { Injector } from '@angular/core'
-import { ConfigService, getCSSFontFamily, getWindows10Build, HostAppService, HotkeysService, NotificationsService, Platform, PlatformService, ThemesService, TranslateService } from 'tabby-core'
+import { ConfigService, getCSSFontFamily, getWindows10Build, HostAppService, HotkeysService, NotificationsService, Platform, PlatformService, ThemesService, TranslateService, LogService, Logger } from 'tabby-core'
 import { Frontend, SearchOptions, SearchState } from './frontend'
 import { Terminal, ITheme } from '@xterm/xterm'
 import { FitAddon } from '@xterm/addon-fit'
@@ -95,6 +95,8 @@ export class XTermFrontend extends Frontend {
     private themes: ThemesService
     private notifications: NotificationsService
     private translate: TranslateService
+    private log: LogService
+    private logger: Logger
 
     constructor (injector: Injector) {
         super(injector)
@@ -105,6 +107,8 @@ export class XTermFrontend extends Frontend {
         this.themes = injector.get(ThemesService)
         this.notifications = injector.get(NotificationsService)
         this.translate = injector.get(TranslateService)
+        this.log = injector.get(LogService)
+        this.logger = this.log.create('xterm')
 
         this.xterm = new Terminal({
             allowTransparency: true,
@@ -492,7 +496,7 @@ export class XTermFrontend extends Frontend {
         const renderStale = now - this.lastRenderAt > 1000
 
         if (canvasInvalid || renderStale) {
-            console.warn('Renderer stalled, resetting', { canvasInvalid, renderStale })
+            this.logger.warn('Renderer stalled, resetting', { canvasInvalid, renderStale })
             this.resetRenderer()
         }
     }
