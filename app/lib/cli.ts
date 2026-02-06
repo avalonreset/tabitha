@@ -93,6 +93,10 @@ export function createParserConfig (cwd: string): ParserConfig {
                 describe: 'Start minimized',
                 type: 'boolean',
             },
+            selfTest: {
+                describe: 'Run renderer self-test and exit',
+                type: 'boolean',
+            },
         },
         version: app.getVersion(),
     }

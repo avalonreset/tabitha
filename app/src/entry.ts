@@ -15,6 +15,10 @@ import { ipcRenderer } from 'electron'
 
 import { getRootModule } from './app.module'
 import { BootstrapData, BOOTSTRAP_DATA, PluginInfo } from '../../tabby-core/src/api/mainProcess'
+import { AppService } from '../../tabby-core/src/services/app.service'
+import { ProfilesService } from '../../tabby-core/src/services/profiles.service'
+import { ConfigService } from '../../tabby-core/src/services/config.service'
+import { LogService } from '../../tabby-core/src/services/log.service'
 
 // Always land on the start view
 location.hash = ''
@@ -74,6 +78,69 @@ async function bootstrap (bootstrapData: BootstrapData, plugins: PluginInfo[], s
     return moduleRef
 }
 
+let resolveModuleRef: ((m: NgModuleRef<any>) => void) | null = null
+const moduleRefPromise = new Promise<NgModuleRef<any>>(resolve => {
+    resolveModuleRef = resolve
+})
+
+ipcRenderer.on('host:self-test', async () => {
+    const moduleRef = await moduleRefPromise
+    const app = moduleRef.injector.get(AppService)
+    const profiles = moduleRef.injector.get(ProfilesService)
+    const config = moduleRef.injector.get(ConfigService)
+    const log = moduleRef.injector.get(LogService).create('selftest')
+
+    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
+    const allProfiles = await profiles.getProfiles()
+    let profile = allProfiles.find(x => x.id === config.store.terminal.profile)
+    if (!profile) {
+        profile = allProfiles.find(x => x.type === 'local')
+    }
+
+    const tab1 = profile ? await profiles.openNewTabForProfile(profile) : null
+    const tab2 = profile ? await profiles.openNewTabForProfile(profile) : null
+    const tabs = [tab1, tab2].filter(Boolean)
+
+    if (!tabs.length) {
+        log.error('self-test: no tabs created')
+        ipcRenderer.send('app:self-test-result', { ok: false, reason: 'no-tabs' })
+        return
+    }
+
+    for (let i = 0; i < 2; i++) {
+        const tab = tabs[i % tabs.length] as any
+        app.selectTab(tab)
+        await sleep(1200)
+
+        const frontend = tab.frontend
+        if (frontend?.ensureRendererAlive) {
+            frontend.ensureRendererAlive()
+        }
+
+        await sleep(500)
+        const element = frontend?.xterm?.element as HTMLElement | undefined
+        const canvas = element?.querySelector('canvas') as HTMLCanvasElement | null
+        const ok = !!(element && canvas && canvas.width > 0 && canvas.height > 0)
+
+        log.info('self-test check', {
+            ok,
+            canvasWidth: canvas?.width,
+            canvasHeight: canvas?.height,
+        })
+
+        if (!ok) {
+            ipcRenderer.send('app:self-test-result', { ok: false, reason: 'blank-canvas', step: i })
+            return
+        }
+
+        // Wait long enough to cross the 30s idle threshold
+        await sleep(35000)
+    }
+
+    ipcRenderer.send('app:self-test-result', { ok: true })
+})
+
 ipcRenderer.once('start', async (_$event, bootstrapData: BootstrapData) => {
     console.log('Window bootstrap data:', bootstrapData)
 
@@ -88,13 +155,15 @@ ipcRenderer.once('start', async (_$event, bootstrapData: BootstrapData) => {
 
     console.log('Starting with plugins:', plugins)
     try {
-        await bootstrap(bootstrapData, plugins)
+        const moduleRef = await bootstrap(bootstrapData, plugins)
+        resolveModuleRef?.(moduleRef)
     } catch (error) {
         console.error('Angular bootstrapping error:', error)
         console.warn('Trying safe mode')
         window['safeModeReason'] = error
         try {
-            await bootstrap(bootstrapData, plugins, true)
+            const moduleRef = await bootstrap(bootstrapData, plugins, true)
+            resolveModuleRef?.(moduleRef)
         } catch (error2) {
             console.error('Bootstrap failed:', error2)
         }

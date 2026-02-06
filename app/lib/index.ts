@@ -123,6 +123,20 @@ app.on('ready', async () => {
 
     const window = await application.newWindow({ hidden: argv.hidden })
     await window.ready
+    if (argv.selfTest) {
+        const timeout = setTimeout(() => {
+            console.error('Self-test timed out')
+            app.exit(2)
+        }, 180000)
+
+        ipcMain.once('app:self-test-result', (_event, result) => {
+            clearTimeout(timeout)
+            console.log('Self-test result', result)
+            app.exit(result?.ok ? 0 : 1)
+        })
+
+        window.send('host:self-test')
+    }
     window.passCliArguments(process.argv, process.cwd(), false)
     window.focus()
 })
