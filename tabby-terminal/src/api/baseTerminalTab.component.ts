@@ -449,7 +449,7 @@ export class BaseTerminalTabComponent<P extends BaseTerminalProfile> extends Bas
                     if (visibility) {
                         const restore = () => {
                             this.frontend!.setZoom(this.zoom)
-                            this.frontend!.xterm.refresh(0, this.frontend!.xterm.rows - 1)
+                            this.frontend!.forceResize()
                         }
                         restore()
                         setTimeout(restore, 50)

@@ -220,10 +220,7 @@ export class XTermFrontend extends Frontend {
 
         this.resizeHandler = () => {
             try {
-                if (this.xterm.element && getComputedStyle(this.xterm.element).getPropertyValue('height') !== 'auto') {
-                    this.fitAddon.fit()
-                    this.xterm.refresh(0, this.xterm.rows - 1)
-                }
+                this.forceResize()
             } catch (e) {
                 // tends to throw when element wasn't shown yet
                 console.warn('Could not resize xterm', e)
@@ -469,6 +466,14 @@ export class XTermFrontend extends Frontend {
         this.zoom = zoom
         this.setFontSize()
         this.resizeHandler()
+    }
+
+    forceResize (): void {
+        if (!this.xterm.element) {
+            return
+        }
+        this.fitAddon.fit()
+        this.xterm.refresh(0, this.xterm.rows - 1)
     }
 
     private getSearchOptions (searchOptions?: SearchOptions): ISearchOptions {
