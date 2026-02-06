@@ -82,6 +82,7 @@ export class XTermFrontend extends Frontend {
     private ligaturesAddon?: any
     private webGLAddon?: WebglAddon
     private canvasAddon?: CanvasAddon
+    private allowCanvasAddon = true
     private opened = false
     private resizeObserver?: any
     private flowControl: FlowControl
@@ -110,6 +111,7 @@ export class XTermFrontend extends Frontend {
         this.translate = injector.get(TranslateService)
         this.log = injector.get(LogService)
         this.logger = this.log.create('xterm')
+        this.allowCanvasAddon = this.hostApp.platform !== Platform.Windows
 
         this.xterm = new Terminal({
             allowTransparency: true,
@@ -272,7 +274,7 @@ export class XTermFrontend extends Frontend {
             ).subscribe(() => {
                 this.webGLAddon?.clearTextureAtlas()
             })
-        } else {
+        } else if (this.allowCanvasAddon) {
             this.canvasAddon = new CanvasAddon()
             this.xterm.loadAddon(this.canvasAddon)
             this.platformService.displayMetricsChanged$.pipe(
@@ -280,6 +282,8 @@ export class XTermFrontend extends Frontend {
             ).subscribe(() => {
                 this.canvasAddon?.clearTextureAtlas()
             })
+        } else {
+            this.logger.warn('Canvas renderer disabled on Windows, using DOM renderer')
         }
 
         // Allow an animation frame
@@ -540,9 +544,11 @@ export class XTermFrontend extends Frontend {
             if (this.enableWebGL) {
                 this.webGLAddon = new WebglAddon()
                 this.xterm.loadAddon(this.webGLAddon)
-            } else {
+            } else if (this.allowCanvasAddon) {
                 this.canvasAddon = new CanvasAddon()
                 this.xterm.loadAddon(this.canvasAddon)
+            } else {
+                this.logger.warn('Skipping canvas re-init (DOM renderer)')
             }
 
             this.forceResize()
