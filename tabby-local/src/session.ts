@@ -1,5 +1,7 @@
 import * as fs from 'mz/fs'
 import * as fsSync from 'fs'
+import * as os from 'os'
+import * as path from 'path'
 import { Injector } from '@angular/core'
 import { HostAppService, ConfigService, WIN_BUILD_CONPTY_SUPPORTED, isWindowsBuild, Platform, BootstrapData, BOOTSTRAP_DATA, LogService } from 'tabby-core'
 import { BaseSession } from 'tabby-terminal'
@@ -34,6 +36,17 @@ function substituteEnv (env: Record<string, string>) {
         })
     }
     return env
+}
+
+function isValidDirectory (candidate: string | null | undefined): candidate is string {
+    if (!candidate) {
+        return false
+    }
+    try {
+        return fsSync.existsSync(candidate) && fsSync.statSync(candidate).isDirectory()
+    } catch {
+        return false
+    }
 }
 
 /** @hidden */
@@ -97,11 +110,17 @@ export class Session extends BaseSession {
             }
 
             // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-            let cwd = options.cwd || process.env.HOME
+            let cwd = options.cwd || process.env.HOME || os.homedir()
 
-            if (!fsSync.existsSync(cwd!)) {
-                console.warn('Ignoring non-existent CWD:', cwd)
-                cwd = undefined
+            if (!isValidDirectory(cwd)) {
+                console.warn('Ignoring invalid CWD:', cwd)
+                const fallbackCwds = [
+                    process.env.USERPROFILE,
+                    process.env.HOMEDRIVE && process.env.HOMEPATH ? `${process.env.HOMEDRIVE}${process.env.HOMEPATH}` : null,
+                    process.env.SystemRoot,
+                    os.tmpdir(),
+                ]
+                cwd = fallbackCwds.find(isValidDirectory) ?? os.tmpdir()
             }
 
             pty = await this.ptyInterface.spawn(options.command, options.args, {
@@ -109,13 +128,13 @@ export class Session extends BaseSession {
                 cols: options.width ?? 80,
                 rows: options.height ?? 30,
                 encoding: null,
-                cwd,
+                cwd: path.resolve(cwd ?? os.tmpdir()),
                 env: env,
                 // `1` instead of `true` forces ConPTY even if unstable
                 useConpty: isWindowsBuild(WIN_BUILD_CONPTY_SUPPORTED) && this.config.store.terminal.useConPTY ? 1 : false,
             })
 
-            this.guessedCWD = cwd ?? null
+            this.guessedCWD = path.resolve(cwd ?? os.tmpdir())
         }
 
         this.pty = pty
