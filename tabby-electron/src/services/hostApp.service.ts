@@ -43,6 +43,15 @@ export class ElectronHostAppService extends HostAppService {
                     handled = true
                 }
             }
+
+            if (argv?.selfTest) {
+                setTimeout(() => {
+                    const fn = (window as any).tabithaSelfTestRun
+                    if (typeof fn === 'function') {
+                        fn()
+                    }
+                })
+            }
         }))
 
         electron.ipcRenderer.on('host:config-change', () => this.zone.run(() => {

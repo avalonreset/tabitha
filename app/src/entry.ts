@@ -83,7 +83,7 @@ const moduleRefPromise = new Promise<NgModuleRef<any>>(resolve => {
     resolveModuleRef = resolve
 })
 
-ipcRenderer.on('host:self-test', async () => {
+const runSelfTest = async () => {
     const moduleRef = await moduleRefPromise
     const app = moduleRef.injector.get(AppService)
     const profiles = moduleRef.injector.get(ProfilesService)
@@ -139,7 +139,10 @@ ipcRenderer.on('host:self-test', async () => {
     }
 
     ipcRenderer.send('app:self-test-result', { ok: true })
-})
+}
+
+window['tabithaSelfTestRun'] = runSelfTest
+ipcRenderer.on('host:self-test', runSelfTest)
 
 ipcRenderer.once('start', async (_$event, bootstrapData: BootstrapData) => {
     console.log('Window bootstrap data:', bootstrapData)
